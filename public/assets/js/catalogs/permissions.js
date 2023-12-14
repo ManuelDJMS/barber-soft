@@ -1,5 +1,5 @@
 "use strict";
-var KTrolesList = (function () {
+var KTpermissionsList = (function () {
     var table_items,
         btn_modal,
         btn_cancel,
@@ -12,13 +12,13 @@ var KTrolesList = (function () {
         n,
         edit = () => {
             n.querySelectorAll(
-                '[data-kt-role-table-filter="edit"]'
+                '[data-kt-permission-table-filter="edit"]'
             ).forEach((e) => {
                 e.addEventListener("click", function (e) {
                     e.preventDefault();
-                    $.get("roles/"+ $(this).data("id") + "/edit", function(data){
-                        edit_name.value=data.rol.name;
-                        edit_id.value=data.rol.id;
+                    $.get("permissions/"+ $(this).data("id") + "/edit", function(data){
+                        edit_name.value=data.permission.name;
+                        edit_id.value=data.permission.id;
                         modal.show();
                     })
                 });
@@ -27,7 +27,7 @@ var KTrolesList = (function () {
         delete_items = () => {
             const e = n.querySelectorAll('[type="checkbox"]'),
                 o = document.querySelector(
-                    '[data-kt-role-table-select="delete_selected"]'
+                    '[data-kt-permission-table-select="delete_selected"]'
                 );
             e.forEach((t) => {
                 t.addEventListener("click", function () {
@@ -41,6 +41,7 @@ var KTrolesList = (function () {
                 e.forEach((e) => {
                     e.checked && arr_items_deleted.push($(e).data("id"));
                 });
+                console.log(arr_items_deleted);
                 Swal.fire({
                     text: "Estas seguro de eliminar los registros seleccionados?",
                     icon: "warning",
@@ -56,7 +57,7 @@ var KTrolesList = (function () {
                     o.value
                     ?
                     $.ajax({
-                        url: "destroy_roles",
+                        url: "destroy_permissions",
                         type: "POST",
                         dataType:"json",
                         headers: {
@@ -89,7 +90,7 @@ var KTrolesList = (function () {
                             Swal.fire({
                                 icon: "error",
                                 title: "Error",
-                                text: "Ocurrió un error en la base de datos!",
+                                text: "Ocurrio un error en la base de datos!",
                             });
                                 console.log(data);
                         }
@@ -110,13 +111,13 @@ var KTrolesList = (function () {
         };
         const uncheck = () => {
             const t = document.querySelector(
-                    '[data-kt-role-table-toolbar="base"]'
+                    '[data-kt-permission-table-toolbar="base"]'
                 ),
                 e = document.querySelector(
-                    '[data-kt-role-table-toolbar="selected"]'
+                    '[data-kt-permission-table-toolbar="selected"]'
                 ),
                 o = document.querySelector(
-                    '[data-kt-role-table-select="selected_count"]'
+                    '[data-kt-permission-table-select="selected_count"]'
                 ),
                 c = n.querySelectorAll('tbody [type="checkbox"]');
             let r = !1,
@@ -132,15 +133,15 @@ var KTrolesList = (function () {
         return {
             init: function () {
                 (modal = new bootstrap.Modal(
-                    document.querySelector("#kt_modal_add_role")
+                    document.querySelector("#kt_modal_add_permission")
                 )),
                 // inicialize elements html
-                (form = document.querySelector("#kt_modal_add_role_form")),
-                (btn_modal = form.querySelector("#kt_modal_add_role_close")),
-                (btn_submit = form.querySelector("#kt_modal_add_role_submit")),
-                (btn_cancel = form.querySelector("#kt_modal_add_role_cancel")),
+                (form = document.querySelector("#kt_modal_add_permission_form")),
+                (btn_modal = form.querySelector("#kt_modal_add_permission_close")),
+                (btn_submit = form.querySelector("#kt_modal_add_permission_submit")),
+                (btn_cancel = form.querySelector("#kt_modal_add_permission_cancel")),
                 (edit_name = form.querySelector("#name")),
-                (edit_id = form.querySelector("#id_rol")),
+                (edit_id = form.querySelector("#id_permission")),
                 (validations = FormValidation.formValidation(form, {
                     fields: {
                         name: {
@@ -160,12 +161,12 @@ var KTrolesList = (function () {
                         }),
                     },
                 })),
-                (n = document.querySelector("#kt_roles_table")) &&
+                (n = document.querySelector("#kt_permissions_table")) &&
                     (n.querySelectorAll("tbody tr").forEach((t) => {
                         // formats
                         }),
                         (table_items = $(n).DataTable({
-                            ajax: "roles",
+                            ajax: "permissions",
                             processing: true,
                             columns: [
                                 { data: "check", name: "check" },
@@ -197,7 +198,7 @@ var KTrolesList = (function () {
                         }),
                         delete_items(),
                         edit(),
-                        document.querySelector('[data-kt-role-table-filter="search"]').addEventListener("keyup", function (e) {
+                        document.querySelector('[data-kt-permission-table-filter="search"]').addEventListener("keyup", function (e) {
                             table_items.search(e.target.value).draw();
                         })
                     );
@@ -226,14 +227,14 @@ var KTrolesList = (function () {
                                     ),
 
                                     $.ajax({
-                                        url: "roles",
+                                        url: "permissions",
                                         type: "POST",
                                         dataType:"json",
                                         encode: "true",
                                         headers: {
                                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                         },
-                                        data: $("#kt_modal_add_role_form").serialize(),
+                                        data: $("#kt_modal_add_permission_form").serialize(),
                                         success: function (result) {
                                                 Swal.fire({
                                                 text: "Datos guardados exitosamente!",
@@ -285,5 +286,5 @@ var KTrolesList = (function () {
         };
 })();
 KTUtil.onDOMContentLoaded(function () {
-    KTrolesList.init();
+    KTpermissionsList.init();
 });

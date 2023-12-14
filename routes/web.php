@@ -25,4 +25,10 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+     // PERMISSIONS
+     Route::resource('permissions', 'App\Http\Controllers\PermissionsController');
+     Route::post('destroy_permissions', 'App\Http\Controllers\PermissionsController@destroy_permissions');
+     // ROLES
+     Route::resource('roles', 'App\Http\Controllers\RolesController');
+     Route::post('destroy_roles', 'App\Http\Controllers\RolesController@destroy_roles');
 });
