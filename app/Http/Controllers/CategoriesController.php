@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Categories;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Input;
+use Auth;
 
 class CategoriesController extends Controller
 {
@@ -40,17 +41,18 @@ class CategoriesController extends Controller
                     ->make(true);
         }
 
-        return view('admin/categories');
+        return view('catalogs/categories');
     }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $roles = Roles::updateOrCreate(
-
-            ['id'=>$request->get('id_rol')],
-            ['name' => $request->input('name'), 'guard_name' => $request->input('name')],
+        $roles = Categories::updateOrCreate(
+            ['id'=>$request->get('id_category')],
+            ['user_id'=>Auth::user()->id,
+            'name' => $request->input('name'),
+            'description' => $request->input('description')],
         );
         return response()->json(["OK"=>"Se guardo correctamente"]);
     }
@@ -59,18 +61,18 @@ class CategoriesController extends Controller
      */
     public function edit(string $id)
     {
-        $rol=Roles::find($id);
+        $category=Categories::find($id);
 
-        return response()->json(['rol'=>$rol]);
+        return response()->json(['category'=>$category]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy_roles(Request $request)
+    public function destroy_categories(Request $request)
     {
         $ids = $request->input('ids');
-        Roles::whereIn('id', $ids)->delete();
+        Categories::whereIn('id', $ids)->delete();
         return response()->json(["OK"=>"Eliminados"]);
     }
 }

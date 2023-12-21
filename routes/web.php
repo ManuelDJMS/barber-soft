@@ -36,4 +36,7 @@ Route::middleware([
     Route::post("destroy_users", "App\Http\Controllers\UsersController@destroy_users");
     Route::get('get_user_permission', 'App\Http\Controllers\UsersController@get_user_permission');
     Route::post('save_user_permissions', 'App\Http\Controllers\UsersController@save_user_permissions');
+    // CATEGORIES
+    Route::resource('categories', 'App\Http\Controllers\CategoriesController');
+    Route::post('destroy_categories', 'App\Http\Controllers\CategoriesController@destroy_categories');
 });
