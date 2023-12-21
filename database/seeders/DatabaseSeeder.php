@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 use Hash;
 
 class DatabaseSeeder extends Seeder
@@ -24,5 +25,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password'=> Hash::make('123456')
         ]);
+        // Create role administrator
+        Role::create(['name' => 'admin']);
     }
 }

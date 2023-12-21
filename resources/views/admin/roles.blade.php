@@ -4,23 +4,6 @@
 @section('admin', 'active')
 @section('subtitle_top', 'Control de Roles')
 @section('content')
-    <style>
-        .progress {
-        width: 158.4px;
-        height: 26.4px;
-        border-radius: 26.4px;
-        background: repeating-linear-gradient(135deg,#3876ff 0 13.2px,rgba(56,118,255,0.75) 0 26.4px) left/0%   100% no-repeat,
-                repeating-linear-gradient(135deg,rgba(56,118,255,0.2) 0 13.2px,rgba(56,118,255,0.1) 0 26.4px) left/100% 100%;
-        animation: progress-p43u5e 1.6s infinite;
-        }
-
-        @keyframes progress-p43u5e {
-        100% {
-            background-size: 100% 100%;
-        }
-        }
-    </style>
-
     <div id="kt_content_container" class="container-xxl">
         <div class="card">
             <div class="card-header border-0 pt-6">
@@ -118,7 +101,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
 @section('scripts')

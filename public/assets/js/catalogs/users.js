@@ -7,16 +7,18 @@ var KTUsersList = (function () {
         btn_cancel,
         btn_submit,
         btn_add_permission,
+        btn_save_permissions,
         modal,
         modal_permission,
         validations,
         form,
         edit_name,
-        edit_user_name,
+        edit_email,
         edit_last_name,
         edit_address,
         edit_phone,
         edit_id,
+        edit_id_permission,
         n,
         select_permission,
         delete_permission = () => {
@@ -68,7 +70,7 @@ var KTUsersList = (function () {
                     $.get("users/"+ $(this).data("id") + "/edit", function(data){
                         edit_name.value=data.user.name;
                         edit_id.value=data.user.id;
-                        edit_user_name.value=data.user.username;
+                        edit_email.value=data.user.email;
                         edit_address.value=data.user.address;
                         edit_phone.value=data.user.phone;
                         edit_last_name.value=data.user.last_name;
@@ -81,6 +83,7 @@ var KTUsersList = (function () {
             ).forEach((e) => {
                 e.addEventListener("click", function (e) {
                     e.preventDefault();
+                    edit_id_permission.value=$(this).data("id");
                     // GET USER PERMISSION
                     $.ajax({
                         url: "get_user_permission",
@@ -238,14 +241,16 @@ var KTUsersList = (function () {
                 (modal_permission = new bootstrap.Modal(document.querySelector("#kt_modal_permission"))),
                 // inicialize elements html
                 (btn_add_permission = document.querySelector("#btn_add_permission")),
+                (btn_save_permissions = document.querySelector("#btn_save_permissions")),
                 (select_permission = document.querySelector("#select_permission")),
+                (edit_id_permission = document.querySelector("#user_id")),
                 (form = document.querySelector("#kt_modal_add_user_form")),
                 (btn_modal = form.querySelector("#kt_modal_add_user_close")),
                 (btn_submit = form.querySelector("#kt_modal_add_user_submit")),
                 (btn_cancel = form.querySelector("#kt_modal_add_user_cancel")),
                 (edit_name = form.querySelector("#name")),
                 (edit_last_name = form.querySelector("#last_name")),
-                (edit_user_name = form.querySelector("#user_name")),
+                (edit_email = form.querySelector("#email")),
                 (edit_address = form.querySelector("#address")),
                 (edit_phone = form.querySelector("#phone")),
                 (edit_id = form.querySelector("#id_user")),
@@ -265,10 +270,10 @@ var KTUsersList = (function () {
                                 },
                             },
                         },
-                        user_name: {
+                        email: {
                             validators: {
                                 notEmpty: {
-                                    message: "Nombre de Usuario requerido",
+                                    message: "Email requerido",
                                 },
                             },
                         },
@@ -292,8 +297,9 @@ var KTUsersList = (function () {
                         columns: [
                             { data: "check", name: "check" },
                             { data: "id", name: "id" },
-                            { data: "username", name: "user_name" },
+                            { data: "email", name: "email" },
                             { data: "name", name: "name" },
+                            { data: "last_name", name: "last_name" },
                             { data: "phone", name: "phone" },
                             { data: "address", name: "address" },
                             { data: "buttons", name: "buttons" },
@@ -360,15 +366,73 @@ var KTUsersList = (function () {
                 btn_add_permission.addEventListener("click", function (t) {
                     t.preventDefault();
                     if(select_permission.value != ""){
-                        table_permissions.row.add([select_permission.value, `<button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1" data-kt-customer-table-filter="delete_row">
-                        <span class="svg-icon svg-icon-muted svg-icon-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black"/>
-                            <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="black"/>
-                            <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="black"/>
-                            </svg></span>
-                    </button>`]).draw();
+                        var data = table_permissions.rows().data(); // All data datatable permissions
+                        let repeat=false;
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i][0] === select_permission.value) {
+                                repeat=true;
+                            }
+                        }
+                        if(repeat){
+                            Swal.fire({
+                                title: "Advertencia!",
+                                text: "El permiso " + select_permission.value +" ya esta asignado al usuario!",
+                                icon: "warning"
+                              });
+                        }else{
+                            table_permissions.row.add([select_permission.value, `<button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1" data-kt-customer-table-filter="delete_row">
+                                <span class="svg-icon svg-icon-muted svg-icon-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black"/>
+                                    <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="black"/>
+                                    <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="black"/>
+                                    </svg></span>
+                                </button>`]).draw();
+                        }
+                    }
+                    else{
+                        Swal.fire({
+                            title: "Advertencia!",
+                            text: "Seleccione un permiso!",
+                            icon: "warning"
+                          });
                     }
 
+                });
+                // SAVE PERMISSIONS TO USER
+                btn_save_permissions.addEventListener("click", function (t) {
+                    t.preventDefault();
+                    var data = table_permissions.column(0).data().toArray();
+                    // Realizar la petición AJAX
+                    $.ajax({
+                        url: 'save_user_permissions',
+                        type: 'POST',
+                        data: {
+                            permissions:JSON.stringify(data),
+                            user_id:edit_id_permission.value
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                text: "Datos guardados exitosamente!",
+                                icon: "success",
+                                buttonsStyling: !1,
+                                confirmButtonText:
+                                    "Entendido!",
+                                customClass: {
+                                confirmButton:
+                                    "btn btn-primary",
+                            },
+                            }).then(function (e) {
+                                e.isConfirmed &&
+                                    (modal_permission.hide())
+                            });
+                        },
+                        error: function(error) {
+                            console.error('Error al guardar datos:', error);
+                        }
+                    });
                 });
                 // SUBMIT
                 btn_submit.addEventListener("click", function (e) {
@@ -389,8 +453,8 @@ var KTUsersList = (function () {
                                     $.ajax({
                                         url: "users",
                                         type: "POST",
-                                        // dataType:"json",
-                                        // encode: "true",
+                                        dataType:"json",
+                                        encode: "true",
                                         headers: {
                                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                         },
