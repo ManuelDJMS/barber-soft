@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('shop_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('shop_id')->unsigned()->index();
+            $table->bigInteger('purchase_id')->unsigned()->index();
             $table->bigInteger('product_id')->unsigned()->index();
             $table->integer('quantity');
             $table->timestamps();
             $table->softdeletes();
-            $table->foreign('shop_id')->references('id')->on('shops');
+            $table->foreign('purchase_id')->references('id')->on('purchases');
             $table->foreign('product_id')->references('id')->on('products');
         });
     }

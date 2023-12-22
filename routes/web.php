@@ -42,4 +42,6 @@ Route::middleware([
     // PRODUCTS
     Route::resource('products', 'App\Http\Controllers\ProductsController');
     Route::post('destroy_products', 'App\Http\Controllers\ProductsController@destroy_products');
+    // PURCHASES
+    Route::get('purchases', 'App\Http\Controllers\PurchasesController@purchases');
 });

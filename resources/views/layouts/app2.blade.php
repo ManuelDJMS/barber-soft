@@ -85,19 +85,11 @@
                                             <span class="menu-title">Productos</span>
                                         </a>
                                     </div>
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                                        <span class="menu-link">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Sucursales</span>
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
                             <div data-kt-menu-trigger="click" data-kt-menu-placement="right-start"
                                 class="menu-item py-2">
-                                <span class="menu-link menu-center" data-bs-trigger="hover" data-bs-dismiss="click"
+                                <span class="menu-link menu-center  @yield("purchases")" data-bs-trigger="hover" data-bs-dismiss="click"
                                     data-bs-placement="right">
                                     <span class="menu-icon me-0">
                                         <i class="bi bi-basket3 fs-2"></i>
@@ -111,7 +103,7 @@
                                         </div>
                                     </div>
                                     <div class="menu-item">
-                                        <a class="menu-link" href="../../demo6/dist/account/overview.html">
+                                        <a class="menu-link" href="purchases">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
