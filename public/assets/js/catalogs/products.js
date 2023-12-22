@@ -1,5 +1,5 @@
 "use strict";
-var KTcategoriesList = (function () {
+var KTproductsList = (function () {
     var table_items,
         btn_modal,
         btn_cancel,
@@ -10,17 +10,27 @@ var KTcategoriesList = (function () {
         edit_id,
         edit_name,
         edit_description,
+        edit_xtock,
+        edit_cost,
+        edit_price_a,
+        edit_price_b,
+        select_category,
         n,
         edit = () => {
             n.querySelectorAll(
-                '[data-kt-category-table-filter="edit"]'
+                '[data-kt-product-table-filter="edit"]'
             ).forEach((e) => {
                 e.addEventListener("click", function (e) {
                     e.preventDefault();
-                    $.get("categories/"+ $(this).data("id") + "/edit", function(data){
-                        edit_id.value=data.category.id;
-                        edit_name.value=data.category.name;
-                        edit_description.value=data.category.description;
+                    $.get("products/"+ $(this).data("id") + "/edit", function(data){
+                        edit_id.value=data.product.id;
+                        edit_name.value=data.product.name;
+                        edit_xtock.value=data.product.xtock;
+                        edit_cost.value=data.product.cost;
+                        edit_price_a.value=data.product.price_a;
+                        edit_price_b.value=data.product.price_b;
+                        edit_description.value=data.product.description;
+                        select_category.value=data.product.category_id;
                         modal.show();
                     })
                 });
@@ -29,7 +39,7 @@ var KTcategoriesList = (function () {
         delete_items = () => {
             const e = n.querySelectorAll('[type="checkbox"]'),
                 o = document.querySelector(
-                    '[data-kt-category-table-select="delete_selected"]'
+                    '[data-kt-product-table-select="delete_selected"]'
                 );
             e.forEach((t) => {
                 t.addEventListener("click", function () {
@@ -58,7 +68,7 @@ var KTcategoriesList = (function () {
                     o.value
                     ?
                     $.ajax({
-                        url: "destroy_categories",
+                        url: "destroy_products",
                         type: "POST",
                         dataType:"json",
                         headers: {
@@ -112,13 +122,13 @@ var KTcategoriesList = (function () {
         };
         const uncheck = () => {
             const t = document.querySelector(
-                    '[data-kt-category-table-toolbar="base"]'
+                    '[data-kt-product-table-toolbar="base"]'
                 ),
                 e = document.querySelector(
-                    '[data-kt-category-table-toolbar="selected"]'
+                    '[data-kt-product-table-toolbar="selected"]'
                 ),
                 o = document.querySelector(
-                    '[data-kt-category-table-select="selected_count"]'
+                    '[data-kt-product-table-select="selected_count"]'
                 ),
                 c = n.querySelectorAll('tbody [type="checkbox"]');
             let r = !1,
@@ -133,16 +143,19 @@ var KTcategoriesList = (function () {
         };
         return {
             init: function () {
-                (modal = new bootstrap.Modal(
-                    document.querySelector("#kt_modal_add_category")
-                )),
+                (modal = new bootstrap.Modal(document.querySelector("#kt_modal_add_product"))),
+                (select_category = document.querySelector("#category_id")),
                 // inicialize elements html
-                (form = document.querySelector("#kt_modal_add_category_form")),
-                (btn_modal = form.querySelector("#kt_modal_add_category_close")),
-                (btn_submit = form.querySelector("#kt_modal_add_category_submit")),
-                (btn_cancel = form.querySelector("#kt_modal_add_category_cancel")),
-                (edit_id = form.querySelector("#id_category")),
+                (form = document.querySelector("#kt_modal_add_product_form")),
+                (btn_modal = form.querySelector("#kt_modal_add_product_close")),
+                (btn_submit = form.querySelector("#kt_modal_add_product_submit")),
+                (btn_cancel = form.querySelector("#kt_modal_add_product_cancel")),
+                (edit_id = form.querySelector("#id_product")),
                 (edit_name = form.querySelector("#name")),
+                (edit_xtock = form.querySelector("#xtock")),
+                (edit_cost = form.querySelector("#cost")),
+                (edit_price_a = form.querySelector("#price_a")),
+                (edit_price_b = form.querySelector("#price_b")),
                 (edit_description = form.querySelector("#description")),
                 (validations = FormValidation.formValidation(form, {
                     fields: {
@@ -150,6 +163,27 @@ var KTcategoriesList = (function () {
                             validators: {
                                 notEmpty: {
                                     message: "Nombre requerido",
+                                },
+                            },
+                        },
+                        xtock: {
+                            validators: {
+                                notEmpty: {
+                                    message: "Cantidad requerido",
+                                },
+                            },
+                        },
+                        cost: {
+                            validators: {
+                                notEmpty: {
+                                    message: "Costo requerido",
+                                },
+                            },
+                        },
+                        pricea: {
+                            validators: {
+                                notEmpty: {
+                                    message: "Precio requerido",
                                 },
                             },
                         },
@@ -163,18 +197,22 @@ var KTcategoriesList = (function () {
                         }),
                     },
                 })),
-                (n = document.querySelector("#kt_categories_table")) &&
+                (n = document.querySelector("#kt_products_table")) &&
                     (n.querySelectorAll("tbody tr").forEach((t) => {
                         // formats
                         }),
                         (table_items = $(n).DataTable({
-                            ajax: "categories",
+                            ajax: "products",
                             processing: true,
                             columns: [
                                 { data: "check", name: "check" },
                                 { data: "id", name: "id" },
                                 { data: "name", name: "name" },
-                                { data: "description", name: "description" },
+                                { data: "category", name: "category" },
+                                { data: "xtock", name: "xtock" },
+                                { data: "cost", name: "cost" },
+                                { data: "price_a", name: "price_a" },
+                                { data: "price_b", name: "price_b" },
                                 { data: "buttons", name: "buttons" },
                             ],
                             order: [[2, "asc"]],
@@ -201,7 +239,7 @@ var KTcategoriesList = (function () {
                         }),
                         delete_items(),
                         edit(),
-                        document.querySelector('[data-kt-category-table-filter="search"]').addEventListener("keyup", function (e) {
+                        document.querySelector('[data-kt-product-table-filter="search"]').addEventListener("keyup", function (e) {
                             table_items.search(e.target.value).draw();
                         })
                     );
@@ -230,14 +268,14 @@ var KTcategoriesList = (function () {
                                     ),
 
                                     $.ajax({
-                                        url: "categories",
+                                        url: "products",
                                         type: "POST",
                                         dataType:"json",
                                         encode: "true",
                                         headers: {
                                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                         },
-                                        data: $("#kt_modal_add_category_form").serialize(),
+                                        data: $("#kt_modal_add_product_form").serialize(),
                                         success: function (result) {
                                                 Swal.fire({
                                                 text: "Datos guardados exitosamente!",
@@ -289,5 +327,5 @@ var KTcategoriesList = (function () {
         };
 })();
 KTUtil.onDOMContentLoaded(function () {
-    KTcategoriesList.init();
+    KTproductsList.init();
 });

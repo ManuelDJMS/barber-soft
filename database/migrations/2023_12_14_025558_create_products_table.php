@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('xtock');
             $table->double('cost', 10, 2);
             $table->double('price_a', 10, 2);
-            $table->double('price_b', 10, 2);
+            $table->double('price_b', 10, 2)->nullable();
             $table->timestamps();
             $table->softdeletes();
             $table->foreign('user_id')->references('id')->on('users');

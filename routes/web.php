@@ -39,4 +39,7 @@ Route::middleware([
     // CATEGORIES
     Route::resource('categories', 'App\Http\Controllers\CategoriesController');
     Route::post('destroy_categories', 'App\Http\Controllers\CategoriesController@destroy_categories');
+    // PRODUCTS
+    Route::resource('products', 'App\Http\Controllers\ProductsController');
+    Route::post('destroy_products', 'App\Http\Controllers\ProductsController@destroy_products');
 });

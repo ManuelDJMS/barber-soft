@@ -135,7 +135,7 @@
                         <div class="row">
                             <div class="col-9">
                                 <label for="" class="form-label">Permiso</label>
-                                <select id="select_permission" class="form-select form-select-solid" data-control="select2" data-dropdown-parent="#kt_modal_permission" data-placeholder="Selecciona un pemriso" data-allow-clear="true">
+                                <select id="select_permission" class="form-select form-select-solid" data-control="select2" data-dropdown-parent="#kt_modal_permission" data-placeholder="Selecciona un permiso" data-allow-clear="true">
                                     <option></option>
                                     @foreach($roles as $rol)
                                         <option value="{{$rol->name}}">{{$rol->name}}</option>
