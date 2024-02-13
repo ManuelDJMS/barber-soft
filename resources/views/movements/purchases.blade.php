@@ -1,11 +1,10 @@
-dhsakjsaddsa
 @extends('layouts/app2')
 @section('title', 'Compras')
 @section('title_top', 'Compras')
 @section('purchases', 'active')
 @section('subtitle_top', 'Control de Compras')
 @section('content')
-    <div id="kt_content_container" class="container-xxl">
+    <div id="kt_content_container" class="container-fluid">
         <div class="d-flex flex-column flex-lg-row">
             <div class="flex-lg-row-fluid me-lg-15 order-2 order-lg-1 mb-10 mb-lg-0">
                 <form class="form" action="#" id="kt_subscriptions_create_new">
@@ -17,15 +16,15 @@ dhsakjsaddsa
                             <div class="card-toolbar">
                                 <div class="row">
                                     <div class="col-lg-10">
-                                        <select id="products" name="products" class="form-select form-select-solid mb-5 mb-lg-10" data-control="select2" data-placeholder="Selecciona una categoría" data-allow-clear="true">
+                                        <select id="products" name="products" class="form-select form-select-solid mb-5 mb-lg-10" data-control="select2" data-placeholder="Selecciona una producto" data-allow-clear="true">
                                             <option></option>
                                             @foreach($products as $product)
-                                                <option value="{{$product->id.'-'.$product->price_a.'_'.$product->price_b}}">{{$product->name}}</option>
+                                                <option value="{{$product->id.'_'.$product->price_a.'_'.$product->price_b}}">{{$product->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-lg-2">
-                                        <button type="button" class="btn btn-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_product">
+                                        <button type="button" class="btn btn-light-primary" id="kt_modal_add_product">
                                             <i class="bi bi-plus-lg"></i>
                                         </button>
                                     </div>
@@ -34,23 +33,26 @@ dhsakjsaddsa
                         </div>
                         <div class="card-body pt-0">
                             <div class="table-responsive">
-                                <table class="table align-middle table-row-dashed fs-6 fw-bold gy-4" id="kt_subscription_products_table">
+                                <table class="table align-middle table-row-dashed fs-6 fw-bold gy-4" id="kt_products_table">
                                     <thead>
                                         <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                                            <th class="min-w-125px">id_producto</th>
                                             <th class="min-w-300px">Producto</th>
-                                            <th class="min-w-100px">Precio</th>
-                                            <th class="min-w-100px">Cantidad</th>
-                                            <th class="min-w-150px">Total</th>
-                                            <th class="min-w-70px text-end">Eliminar</th>
+                                            <th class="min-w-120px">Precio</th>
+                                            <th class="min-w-120px">Cantidad</th>
+                                            <th class="min-w-120px">Total</th>
+                                            <th class="min-w-70px">Eliminar</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-gray-600">
-                                        <tr>
+                                        {{-- <tr>
+                                            <td>1</td>
                                             <td>Beginner Plan</td>
                                             <td>1</td>
+                                            <td>1</td>
                                             <td>149.99 / Month</td>
-                                            <td class="text-end">
-                                                <a href="#" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="tooltip" title="Delete" data-kt-action="product_remove">
+                                            <td>
+                                                <a href="#" class="btn btn-icon btn-flex btn-active-light-danger w-30px h-30px me-3" data-bs-toggle="tooltip" title="Eliminar" data-kt-action="product_remove">
                                                     <span class="svg-icon svg-icon-3">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                             <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black" />
@@ -60,39 +62,7 @@ dhsakjsaddsa
                                                     </span>
                                                 </a>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Pro Plan</td>
-                                            <td>1</td>
-                                            <td>499.99 / Month</td>
-                                            <td class="text-end">
-                                                <a href="#" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="tooltip" title="Delete" data-kt-action="product_remove">
-                                                    <span class="svg-icon svg-icon-3">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black" />
-                                                            <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="black" />
-                                                            <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="black" />
-                                                        </svg>
-                                                    </span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Team Plan</td>
-                                            <td>1</td>
-                                            <td>999.99 / Month</td>
-                                            <td class="text-end">
-                                                <a href="#" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" data-bs-toggle="tooltip" title="Delete" data-kt-action="product_remove">
-                                                    <span class="svg-icon svg-icon-3">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black" />
-                                                            <path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="black" />
-                                                            <path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="black" />
-                                                        </svg>
-                                                    </span>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        </tr> --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -105,12 +75,12 @@ dhsakjsaddsa
                 <div class="card card-xl-stretch mb-5 mb-xl-8">
                     <div class="card-body p-0">
                         <div class="px-9 pt-7 card-rounded h-275px w-100 bg-primary">
-                            <div class="d-flex flex-stack">
+                            <div class="d-flex text-center flex-column">
                                 <h3 class="m-0 text-white fw-bolder fs-3 text-center">Detalles de la Compra</h3>
                             </div>
                             <div class="d-flex text-center flex-column text-white pt-8">
                                 <span class="fw-bold fs-7">Total</span>
-                                <span class="fw-bolder fs-2x pt-1">$37,562.00</span>
+                                <span class="fw-bolder fs-2x pt-1" id="total">$0</span>
                             </div>
                         </div>
                         <div class="bg-body shadow-sm card-rounded mx-9 mb-9 px-6 py-9 position-relative z-index-1" style="margin-top: -100px">
@@ -142,10 +112,15 @@ dhsakjsaddsa
                                 </div>
                                 <div class="d-flex align-items-center flex-wrap w-100">
                                     <div class="mb-1 pe-3 flex-grow-1">
-                                        <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">R</a>
+                                        <p class="fs-5 text-gray-800 fw-bolder" id="date_now"></p>
                                         <div class="text-gray-400 fw-bold fs-7">Fecha</div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="d-flex text-center flex-column">
+                                <button type="button" class="btn btn-light-primary" id="btn_save">
+                                    Guardar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -156,5 +131,5 @@ dhsakjsaddsa
 @endsection
 @section('scripts')
     <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
-    {{-- <script src="{{asset('assets/js/catalogs/categories.js')}}"></script> --}}
+    <script src="{{asset('assets/js/movements/purchases.js')}}"></script>
 @endsection
