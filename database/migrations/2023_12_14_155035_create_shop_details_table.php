@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_details', function (Blueprint $table) {
+        Schema::create('purchases_details', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('purchase_id')->unsigned()->index();
             $table->bigInteger('product_id')->unsigned()->index();
             $table->integer('quantity');
+            $table->double('cost', 10,2);
             $table->timestamps();
             $table->softdeletes();
             $table->foreign('purchase_id')->references('id')->on('purchases');

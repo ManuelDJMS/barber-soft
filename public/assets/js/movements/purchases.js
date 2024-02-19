@@ -54,6 +54,16 @@ var KTUsersList = (function () {
                     step: 1,
                 });
             });
+        },
+        change_quantity = () => {
+            var datosColumna = table_products.column(4).data();
+            console.log(datosColumna)
+            var arrayColumna = datosColumna.toArray();
+            var suma = arrayColumna.reduce(function(a, b) {
+                return a + parseFloat(b);
+            }, 0)
+            total_text.innerText="$"+suma;
+
         }
         return {
             init: function () {
@@ -63,7 +73,7 @@ var KTUsersList = (function () {
                 (total_text = document.querySelector("#total")),
                 (date_now = document.querySelector("#date_now")),
                 date = new Date();
-                date=date.getDate() + "-"+ date.getMonth()+1 + "-" +date.getFullYear();
+                date= date.getFullYear() + "-"+ (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) +"-"+ (date.getDate() < 10 ? '0' + (date.getDate()) : (date.getDate()));
                 date_now.textContent = date;
                 // TABLE PRODUCTS
                 (table_products = $("#kt_products_table").DataTable({
@@ -112,7 +122,7 @@ var KTUsersList = (function () {
                                 icon: "warning"
                               });
                         }else{
-                            table_products.row.add([arr_product[0], select_products.options[select_products.selectedIndex].text, arr_product[1], 1, "149.99 / Month", `<a href="#" class="btn btn-icon btn-flex btn-active-light-danger w-30px h-30px me-3" data-kt-customer-table-filter="delete_row">
+                            table_products.row.add([arr_product[0], select_products.options[select_products.selectedIndex].text, arr_product[1], 1, arr_product[1], `<a href="#" class="btn btn-icon btn-flex btn-active-light-danger w-30px h-30px me-3" data-kt-customer-table-filter="delete_row">
                             <span class="svg-icon svg-icon-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                     <path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black" />
@@ -145,19 +155,30 @@ var KTUsersList = (function () {
                     var cantidad = parseFloat($(this).val());
                     table_products.cell(rowIndex, 3).data(cantidad);
                     var precio = parseFloat(table_products.cell(rowIndex, 2).data());
-                    var total = cantidad * precio;
-                    table_products.cell(rowIndex, 4).data(total);
+                    var total_table = cantidad * precio;
+                    table_products.cell(rowIndex, 4).data(total_table);
+                    // CHANGE TOTAL OF PURCHASE
+                    // let total_arr=total_text.innerText;
+                    // let total_arr= total_text.innerText.split("$");
+                    // total=parseFloat(total_arr[1].replace(/,/g, ''));
+                    // let suma=total+parseFloat(total_table);
+                    // total_text.innerText="$"+suma;
+                    change_quantity()
                 });
-                btn_add_product.addEventListener("click", function (t) {
+                btn_save.addEventListener("click", function (t) {
                     t.preventDefault();
-                    var data_products = table_products.column(0).data().toArray();
+                    var data_products = table_products.data().toArray();
+                    let total_a=total_text.innerText;
+                    let total_t=total_a.split("$");
+                    let sub=total_t[1]
                     // Realizar la petición AJAX
                     $.ajax({
                         url: 'save_purchase',
                         type: 'POST',
                         data: {
                             products:JSON.stringify(data_products),
-                            date:date
+                            date:date,
+                            total:sub
                         },
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -176,6 +197,14 @@ var KTUsersList = (function () {
                             }).then(function (e) {
                                 e.isConfirmed &&
                                     location.reload()
+                            });
+                        },
+                        beforeSend(){
+                            Swal.fire({
+                                title: "<strong>Cargando</strong>",
+                                html: `<div class="progress container-fluid"></div>`,
+                                showConfirmButton: false,
+                                allowOutsideClick: true
                             });
                         },
                         error: function(error) {
